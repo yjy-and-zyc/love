@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>zyc ❤️ yjy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💗</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rose: #e8456b;
+  --rose-light: #fce4ec;
+  --rose-deep: #c62828;
+  --gold: #d4a056;
+  --cream: #fdf6f0;
+  --ink: #2d1b14;
+  --blush: #f8e8e0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Serif SC', serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding-bottom: 0; /* 动态控制：导航栏出现后才加padding */
+}
+
+/* ============ FLOATING PARTICLES ============ */
+.particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: floatUp 8s ease-in infinite;
+}
+
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { opacity: 0; transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(232, 69, 107, 0.1);
+  display: none; /* 表白完成前隐藏 */
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.04);
+}
+
+.bottom-nav.visible { display: flex; }
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 12px;
+  transition: all 0.25s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.nav-item:hover { background: var(--rose-light); }
+.nav-item.active .nav-icon { transform: scale(1.15); }
+.nav-item.active .nav-label { color: var(--rose); font-weight: 700; }
+
+.nav-icon {
+  font-size: 1.4rem;
+  transition: transform 0.25s;
+  line-height: 1;
+}
+
+.nav-label {
+  font-size: 0.7rem;
+  color: #999;
+  font-family: 'ZCOOL XiaoWei', serif;
+  transition: color 0.25s;
+}
+
+/* ============ PAGES ============ */
+.page {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+.page.active { display: block; }
+
+/* ============ PAGE: LETTER ============ */
+#page-letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  min-height: 100vh;
+  background: linear-gradient(175deg, #fdf6f0 0%, #fce4ec 40%, #f8e8e0 100%);
+}
+
+.envelope-wrapper {
+  animation: envelopeDrop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  margin-bottom: 2rem;
+}
+
+@keyframes envelopeDrop {
+  0% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.envelope-icon {
+  font-size: 4rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+  text-align: center;
+}
+.envelope-icon:hover { transform: scale(1.15) rotate(-5deg); }
+
+.letter-container {
+  max-width: 680px;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 60px rgba(200, 100, 100, 0.15), 0 1px 3px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+  animation: letterReveal 1s 0.5s ease both;
+}
+
+@keyframes letterReveal {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.letter-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--rose), var(--gold), var(--rose));
+}
+
+.letter-date {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.letter-greeting {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.8rem;
+  color: var(--rose);
+  margin-bottom: 1.5rem;
+}
+
+.letter-body {
+  line-height: 2.2;
+  font-size: 1.05rem;
+  color: #3a2a22;
+  text-align: justify;
+}
+
+.letter-body p {
+  margin-bottom: 1.2rem;
+  text-indent: 2em;
+}
+
+/* 只在首次加载时播放逐行动画 */
+.letter-body.animate p {
+  animation: fadeInLine 0.8s ease both;
+}
+.letter-body.animate p:nth-child(1) { animation-delay: 0.8s; }
+.letter-body.animate p:nth-child(2) { animation-delay: 1.2s; }
+.letter-body.animate p:nth-child(3) { animation-delay: 1.6s; }
+.letter-body.animate p:nth-child(4) { animation-delay: 2.0s; }
+.letter-body.animate p:nth-child(5) { animation-delay: 2.4s; }
+
+@keyframes fadeInLine {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.letter-sign {
+  text-align: right;
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.4rem;
+  color: var(--rose-deep);
+  margin-top: 2rem;
+}
+
+/* 首次进入时的继续提示（表白前） */
+.scroll-hint {
+  margin-top: 2.5rem;
+  animation: bounce 2s ease infinite;
+  font-size: 0.9rem;
+  color: var(--rose);
+  cursor: pointer;
+  text-align: center;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* ============ PAGE: QUESTION ============ */
+#page-question {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(ellipse at center, #fff5f5, #fce4ec, #f8d7e0);
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 50;
+}
+
+.question-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--rose-deep);
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: heartbeat 1.5s ease infinite;
+  text-shadow: 0 2px 10px rgba(200, 40, 40, 0.15);
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.05); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.05); }
+}
+
+.buttons-wrapper {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.btn-love {
+  padding: 1rem 3rem;
+  font-size: 1.3rem;
+  font-family: 'ZCOOL XiaoWei', serif;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 2;
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, var(--rose), #ff6b8a);
+  color: white;
+  box-shadow: 0 8px 25px rgba(232, 69, 107, 0.4);
+}
+.btn-yes:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(232, 69, 107, 0.5);
+}
+
+.btn-no {
+  background: #f5f5f5;
+  color: #999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: all 0.15s ease;
+}
+
+/* ============ PAGE: TOGETHER (爱心计时) ============ */
+#page-together {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fdf6f0 0%, #fff 50%, #fce4ec 100%);
+  padding-top: 2rem;
+}
+
+.together-header {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.big-heart {
+  width: 220px;
+  height: 220px;
+  position: relative;
+  animation: heartPulse 2s ease infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.big-heart svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 30px rgba(232, 69, 107, 0.3));
+}
+
+.timer-display { text-align: center; }
+
+.timer-label {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.6rem;
+  color: var(--rose);
+  margin-bottom: 0.8rem;
+}
+
+.timer-value {
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--ink);
+  letter-spacing: 2px;
+}
+
+.timer-value span {
+  display: inline-block;
+  background: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  margin: 0 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  min-width: 45px;
+  text-align: center;
+}
+
+.timer-value .timer-unit {
+  font-size: 0.7rem;
+  color: #999;
+  display: block;
+  margin-top: 2px;
+}
+
+/* ============ PAGE: DIARY (日记本) ============ */
+#page-diary {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fdf6f0 0%, #fff 100%);
+  padding-top: 2rem;
+}
+
+/* ---- DIARY LOCK OVERLAY ---- */
+.diary-lock-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, #fdf6f0 0%, #fce4ec 100%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.diary-lock-overlay.unlocked {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.lock-icon {
+  font-size: 4rem;
+  animation: lockBounce 2s ease infinite;
+}
+
+@keyframes lockBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.lock-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.8rem;
+  color: var(--rose);
+}
+
+.lock-subtitle {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+}
+
+.lock-input-wrapper {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.lock-input {
+  width: 200px;
+  padding: 0.8rem 1.2rem;
+  border: 2px solid var(--blush);
+  border-radius: 50px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+  color: var(--ink);
+  background: white;
+}
+
+.lock-input:focus {
+  border-color: var(--rose);
+}
+
+.lock-input::placeholder {
+  letter-spacing: 1px;
+  color: #ccc;
+}
+
+.lock-btn {
+  padding: 0.8rem 1.8rem;
+  background: linear-gradient(135deg, var(--rose), #ff6b8a);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(232, 69, 107, 0.3);
+}
+
+.lock-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232, 69, 107, 0.4);
+}
+
+.lock-error {
+  font-size: 0.85rem;
+  color: var(--rose-deep);
+  height: 1.2rem;
+  transition: opacity 0.3s;
+}
+
+.lock-error.hidden { opacity: 0; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.shake { animation: shake 0.4s ease; }
+
+/* ---- END DIARY LOCK ---- */
+
+.diary-section {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+}
+
+.section-title {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 2rem;
+  color: var(--rose);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  margin: 0.5rem auto 0;
+}
+
+.diary-form {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  margin-bottom: 2rem;
+}
+
+.diary-form textarea {
+  width: 100%;
+  min-height: 120px;
+  border: 2px solid var(--blush);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  resize: vertical;
+  transition: border-color 0.3s;
+  outline: none;
+  line-height: 1.8;
+}
+
+.diary-form textarea:focus { border-color: var(--rose); }
+.diary-form textarea::placeholder { color: #ccc; }
+
+.photo-upload-area {
+  margin-top: 1rem;
+  border: 2px dashed var(--blush);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-upload-area:hover {
+  border-color: var(--rose);
+  background: var(--rose-light);
+}
+
+.photo-upload-area input {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.photo-upload-text { color: #aaa; font-size: 0.95rem; }
+.photo-upload-text .icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+
+.photo-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.photo-preview img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+
+.btn-submit-diary {
+  margin-top: 1.2rem;
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, var(--rose), #ff6b8a);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(232, 69, 107, 0.3);
+}
+
+.btn-submit-diary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232, 69, 107, 0.4);
+}
+
+.diary-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.diary-entry {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  animation: slideUp 0.5s ease both;
+  position: relative;
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.entry-date { font-size: 0.8rem; color: var(--gold); margin-bottom: 0.8rem; font-style: italic; }
+.entry-text { line-height: 1.8; color: var(--ink); margin-bottom: 1rem; white-space: pre-wrap; }
+.entry-photos { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.entry-photos img {
+  width: 120px; height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.entry-photos img:hover { transform: scale(1.05); }
+
+.entry-delete {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: #ddd;
+  cursor: pointer; font-size: 1.2rem; transition: color 0.3s;
+}
+.entry-delete:hover { color: var(--rose); }
+
+/* Lightbox */
+.lightbox {
+  display: none; position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  z-index: 1000;
+  align-items: center; justify-content: center;
+  cursor: zoom-out;
+}
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; object-fit: contain; }
+
+/* Confetti */
+.confetti-container {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 999;
+}
+
+.confetti-piece {
+  position: absolute; top: -10px;
+  animation: confettiFall 3s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+}
+
+/* Reset */
+.reset-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  color: #ccc;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+.reset-link:hover { color: #aaa; }
+
+@media (max-width: 600px) {
+  .letter-container { padding: 2rem 1.5rem; }
+  .btn-love { padding: 0.8rem 2rem; font-size: 1.1rem; }
+  .big-heart { width: 160px; height: 160px; }
+  .diary-form { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')"><img id="lightbox-img" src="" alt=""></div>
+<div class="confetti-container" id="confetti"></div>
+
+<!-- ============ BOTTOM NAVIGATION BAR ============ -->
+<nav class="bottom-nav" id="bottom-nav">
+  <div class="nav-item active" onclick="switchPage('letter')" id="nav-letter">
+    <span class="nav-icon">💌</span>
+    <span class="nav-label">情书</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('together')" id="nav-together">
+    <span class="nav-icon">💗</span>
+    <span class="nav-label">在一起</span>
+  </div>
+  <div class="nav-item" onclick="switchPage('diary')" id="nav-diary">
+    <span class="nav-icon">📖</span>
+    <span class="nav-label">日记本</span>
+  </div>
+</nav>
+
+<!-- ============ PAGE: LOVE LETTER ============ -->
+<div class="page active" id="page-letter">
+  <div class="envelope-wrapper">
+    <div class="envelope-icon">💌</div>
+  </div>
+  <div class="letter-container">
+    <div class="letter-date">2026年云南泸沽湖之旅</div>
+    <div class="letter-greeting">亲爱的小尹殿下：</div>
+    <div class="letter-body animate" id="letter-body">
+      <p>至今想起我们的初遇，依然会感叹命运的奇妙！一趟普普通通的归途列车，却让两个原本毫无交集的灵魂，像被月老偷偷牵了红线一般，毫无预兆地撞进了彼此的生命里。有时候我甚至会怀疑，是不是这世间真有写好的剧本，一切才发生得这样恰到好处与自然。从那一刻起，我的世界里就多了一份独属于你的温柔与热闹。</p>
+      <p>认识你越久，就越发觉得你像一座挖掘不完的宝藏！我们总是那么同频，一样天马行空，一样抽象有趣，并且总能快速get到对方的点。你总想着xxx，而我老是幻想成为歌手，这些白日梦反而给我们的生活增添了不少乐趣。你也是个非常可爱的女孩，尤其是刚睡醒时那种软软糯糯的模样，分分钟要将我心融化。尹师傅骨子里不服输的好胜心也让我非常欣赏，因为我恰恰也是类似的人，同时也深刻地认识到尹师傅这一路走来的不容易，这全是尹师傅努力奋斗的成果！</p>
+      <p>你对待爱人总是毫无保留，把所有的体贴和在意都揉碎了藏在细节里，那些无微不至的照顾，总是让我非常感动。可我也知道，我的小尹殿下偶尔也会脆弱，会在没人的角落偷偷藏起小情绪，会一个人默默内耗。正是这些发着光、又带着点敏感的碎片，拼凑出了一个完整又真实的你，也让我越来越想要深入了解你的全部。</p>
+      <p>和你相处的每一刻，我都像被磁铁吸引一般，不断向你靠拢。从最初觉得你有趣，到慢慢被你的真诚打动，再到后来开始心疼你的敏感，贪恋你的温暖。你像山城的风，轻轻裹住我所有的不安。我变得越来越依恋你，依恋你的陪伴，依恋你怀里的温度，依恋每一个有你在的“平和的幸福”瞬间。</p>
+      <p>同时，我也想成为你的避风港，替你遮风挡雨，为你排忧解难。</p>
+      <p>所以今天，趁着泸沽湖的风还温柔，我想认认真真地问你一个问题——</p>
+      <p>请你翻到下一页吧 ♡</p>
+    </div>
+    <div class="letter-sign">你忠实的雪纳瑞</div>
+  </div>
+  <!-- 表白前显示的"继续"按钮 -->
+  <div class="scroll-hint" id="scroll-hint" onclick="goToQuestion()">↓ 点击继续 ↓</div>
+</div>
+
+<!-- ============ PAGE: QUESTION (表白，一次性) ============ -->
+<div class="page" id="page-question">
+  <div class="question-title">佳仪，你愿意做我的女朋友吗？ 💗</div>
+  <div class="buttons-wrapper" id="buttons-wrapper">
+    <button class="btn-love btn-yes" onclick="sayYes()">愿意 💕</button>
+    <button class="btn-love btn-no" id="btn-no" onmouseover="runAway()" onclick="runAway()">不愿意</button>
+  </div>
+</div>
+
+<!-- ============ PAGE: TOGETHER (爱心计时) ============ -->
+<div class="page" id="page-together">
+  <div class="together-header">
+    <div class="big-heart">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff6b8a"/>
+            <stop offset="100%" style="stop-color:#e8456b"/>
+          </linearGradient>
+        </defs>
+        <path d="M100 180 C55 140, 10 110, 10 70 C10 35, 40 15, 70 15 C85 15, 95 25, 100 35 C105 25, 115 15, 130 15 C160 15, 190 35, 190 70 C190 110, 145 140, 100 180Z" fill="url(#heartGrad)"/>
+        <text x="100" y="95" text-anchor="middle" fill="white" font-family="Ma Shan Zheng, cursive" font-size="20">我们在一起</text>
+        <text x="100" y="118" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="ZCOOL XiaoWei, serif" font-size="11" id="heart-days">0 天</text>
+      </svg>
+    </div>
+    <div class="timer-display">
+      <div class="timer-label">在一起的每一秒都是心动 ♡</div>
+      <div class="timer-value" id="timer-value">
+        <span>0<small class="timer-unit">天</small></span>
+        <span>00<small class="timer-unit">时</small></span>
+        <span>00<small class="timer-unit">分</small></span>
+        <span>00<small class="timer-unit">秒</small></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: DIARY (日记本) ============ -->
+<div class="page" id="page-diary">
+  <!-- 密码锁遮罩 -->
+  <div class="diary-lock-overlay" id="diary-lock">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">这是只属于我们的秘密 ♡</div>
+    <div class="lock-subtitle">输入密码解锁日记本</div>
+    <div class="lock-input-wrapper">
+      <input type="password" class="lock-input" id="lock-password" placeholder="••••••••" maxlength="20"
+             onkeydown="if(event.key==='Enter') unlockDiary()">
+      <button class="lock-btn" onclick="unlockDiary()">解锁 💕</button>
+    </div>
+    <div class="lock-error hidden" id="lock-error">密码不对哦，再想想～</div>
+  </div>
+
+  <div class="diary-section">
+    <div class="section-title">我们的日记本 📖</div>
+    <div class="diary-form">
+      <textarea id="diary-text" placeholder="今天想记录什么呢...写下我们的故事吧 ♡"></textarea>
+      <div class="photo-upload-area">
+        <input type="file" id="photo-input" accept="image/*" multiple onchange="handlePhotos(this)">
+        <div class="photo-upload-text">
+          <span class="icon">📷</span>
+          点击上传我们的照片
+        </div>
+      </div>
+      <div class="photo-preview" id="photo-preview"></div>
+      <button class="btn-submit-diary" onclick="submitDiary()">记录这一刻 💝</button>
+    </div>
+    <div class="diary-entries" id="diary-entries"></div>
+    <div class="reset-link" onclick="resetAll()">重置页面</div>
+  </div>
+</div>
+
+<script>
+// ============ PARTICLES ============
+(function() {
+  const container = document.getElementById('particles');
+  const emojis = ['💕', '🌸', '✨', '💗', '🎀', '💖', '🌹', '♡'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 8 + 's';
+    p.style.animationDuration = (6 + Math.random() * 6) + 's';
+    container.appendChild(p);
+  }
+})();
+
+// ============ STATE ============
+const isAccepted = () => !!localStorage.getItem('together_since');
+
+// ============ DIARY LOCK ============
+let diaryUnlocked = false;
+const DIARY_PASSWORD_HASH = '83155287ee2b5b0ef733dff2aa53bbc6d1117788ea02ec01b0d6945f27353e49';
+
+// 计算字符串的 SHA-256 哈希
+async function sha256(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function unlockDiary() {
+  const input = document.getElementById('lock-password');
+  const errorEl = document.getElementById('lock-error');
+  const overlay = document.getElementById('diary-lock');
+
+  const inputHash = await sha256(input.value);
+
+  if (inputHash === DIARY_PASSWORD_HASH) {
+    diaryUnlocked = true;
+    overlay.classList.add('unlocked');
+    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+    errorEl.classList.add('hidden');
+  } else {
+    errorEl.classList.remove('hidden');
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+    input.value = '';
+    input.focus();
+  }
+}
+
+// 每次切换到日记页时重新显示锁（如果未解锁）
+function showDiaryLock() {
+  const overlay = document.getElementById('diary-lock');
+  if (!diaryUnlocked) {
+    overlay.style.display = 'flex';
+    overlay.classList.remove('unlocked');
+    document.getElementById('lock-password').value = '';
+    document.getElementById('lock-error').classList.add('hidden');
+  }
+}
+
+// ============ PAGE SWITCHING ============
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+
+  const target = document.getElementById('page-' + name);
+  target.classList.add('active');
+  target.style.display = 'flex';
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.getElementById('nav-' + name);
+  if (navItem) navItem.classList.add('active');
+
+  if (name === 'together' && isAccepted()) startTimer();
+  if (name === 'diary') {
+    showDiaryLock();
+    loadDiary();
+  }
+
+  window.scrollTo(0, 0);
+}
+
+// ============ FIRST-TIME FLOW: 情书 → 表白 ============
+function goToQuestion() {
+  // 已经表白过：直接跳到在一起页（通过导航）
+  if (isAccepted()) {
+    switchPage('together');
+    return;
+  }
+  // 第一次：进入表白页
+  document.getElementById('page-letter').classList.remove('active');
+  document.getElementById('page-letter').style.display = 'none';
+  const q = document.getElementById('page-question');
+  q.classList.add('active');
+  q.style.display = 'flex';
+}
+
+// ============ RUN AWAY BUTTON ============
+let noClickCount = 0;
+const funnyTexts = [
+  '不愿意', '再想想？', '真的吗？', '不许选这个！',
+  '人家会伤心的', '抓不到我～', '嘿嘿溜了', '别点我啦！',
+  '你确定？', '再给次机会', '逃跑中...', '就说愿意嘛！'
+];
+
+function runAway() {
+  const btn = document.getElementById('btn-no');
+  noClickCount++;
+  btn.textContent = funnyTexts[Math.min(noClickCount, funnyTexts.length - 1)];
+
+  const maxX = window.innerWidth - 140;
+  const maxY = window.innerHeight - 60;
+  btn.style.position = 'fixed';
+  btn.style.left = Math.random() * maxX + 'px';
+  btn.style.top = Math.random() * maxY + 'px';
+  btn.style.zIndex = '10';
+
+  const yesBtn = document.querySelector('.btn-yes');
+  yesBtn.style.transform = `scale(${Math.min(1 + noClickCount * 0.06, 1.6)})`;
+}
+
+// ============ SAY YES ============
+function sayYes() {
+  if (!localStorage.getItem('together_since')) {
+    localStorage.setItem('together_since', new Date().toISOString());
+  }
+  launchConfetti();
+  setTimeout(() => {
+    // 显示底部导航
+    document.getElementById('bottom-nav').classList.add('visible');
+    document.body.style.paddingBottom = '70px';
+    // 隐藏情书页的"继续"按钮（以后通过导航栏切换）
+    document.getElementById('scroll-hint').style.display = 'none';
+    // 去掉情书的逐行动画（以后再看不需要等动画）
+    document.getElementById('letter-body').classList.remove('animate');
+    // 跳转到在一起页面
+    switchPage('together');
+  }, 1500);
+}
+
+// ============ CONFETTI ============
+function launchConfetti() {
+  const container = document.getElementById('confetti');
+  const shapes = ['❤️', '💕', '🎉', '🎊', '✨', '💖', '🌹'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.animationDelay = Math.random() * 1.5 + 's';
+    piece.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = '', 4000);
+}
+
+// ============ TIMER ============
+let timerStarted = false;
+function startTimer() {
+  if (timerStarted) return;
+  timerStarted = true;
+  const since = new Date(localStorage.getItem('together_since'));
+  function update() {
+    const diff = Date.now() - since;
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    document.getElementById('timer-value').innerHTML = `
+      <span>${days}<small class="timer-unit">天</small></span>
+      <span>${String(hours).padStart(2,'0')}<small class="timer-unit">时</small></span>
+      <span>${String(minutes).padStart(2,'0')}<small class="timer-unit">分</small></span>
+      <span>${String(seconds).padStart(2,'0')}<small class="timer-unit">秒</small></span>`;
+    document.getElementById('heart-days').textContent = days + ' 天';
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// ============ DIARY ============
+let pendingPhotos = [];
+
+function handlePhotos(input) {
+  const preview = document.getElementById('photo-preview');
+  preview.innerHTML = '';
+  pendingPhotos = [];
+  Array.from(input.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingPhotos.push(e.target.result);
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function submitDiary() {
+  const text = document.getElementById('diary-text').value.trim();
+  if (!text && pendingPhotos.length === 0) return;
+  const entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
+  entries.unshift({
+    id: Date.now(),
+    date: new Date().toLocaleString('zh-CN'),
+    text, photos: pendingPhotos
+  });
+  localStorage.setItem('diary_entries', JSON.stringify(entries));
+  document.getElementById('diary-text').value = '';
+  document.getElementById('photo-preview').innerHTML = '';
+  document.getElementById('photo-input').value = '';
+  pendingPhotos = [];
+  loadDiary();
+}
+
+function loadDiary() {
+  const entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
+  const container = document.getElementById('diary-entries');
+  container.innerHTML = '';
+  entries.forEach((entry, i) => {
+    const div = document.createElement('div');
+    div.className = 'diary-entry';
+    div.style.animationDelay = (i * 0.1) + 's';
+    let photosHTML = '';
+    if (entry.photos && entry.photos.length > 0) {
+      photosHTML = '<div class="entry-photos">' +
+        entry.photos.map(p => `<img src="${p}" onclick="openLightbox(this.src)">`).join('') +
+        '</div>';
+    }
+    div.innerHTML = `
+      <button class="entry-delete" onclick="deleteEntry(${entry.id})">×</button>
+      <div class="entry-date">${entry.date}</div>
+      ${entry.text ? `<div class="entry-text">${escapeHtml(entry.text)}</div>` : ''}
+      ${photosHTML}`;
+    container.appendChild(div);
+  });
+}
+
+function deleteEntry(id) {
+  if (!confirm('确定删除这条日记吗？')) return;
+  let entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
+  entries = entries.filter(e => e.id !== id);
+  localStorage.setItem('diary_entries', JSON.stringify(entries));
+  loadDiary();
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+
+function resetAll() {
+  if (!confirm('确定重置吗？这会清除所有数据（日记、计时、表白状态）并回到最初的情书页面。')) return;
+  localStorage.removeItem('together_since');
+  localStorage.removeItem('diary_entries');
+  location.reload();
+}
+
+// ============ 页面初始化 ============
+window.addEventListener('DOMContentLoaded', () => {
+  if (isAccepted()) {
+    // 已经表白过：显示底部导航，隐藏"继续"按钮，去掉逐行动画
+    document.getElementById('bottom-nav').classList.add('visible');
+    document.body.style.paddingBottom = '70px';
+    document.getElementById('scroll-hint').style.display = 'none';
+    document.getElementById('letter-body').classList.remove('animate');
+    // 默认显示在一起页面
+    switchPage('together');
+  }
+  // 未表白：默认显示情书页 + "继续"按钮，无底部导航
+});
+</script>
+</body>
+</html>
