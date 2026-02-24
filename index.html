@@ -30,6 +30,36 @@ body {
   padding-bottom: 0; /* 动态控制：导航栏出现后才加padding */
 }
 
+/* ============ LOADING OVERLAY (等待Firebase加载) ============ */
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--cream);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: opacity 0.5s ease;
+}
+
+.loading-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-heart {
+  font-size: 3rem;
+  animation: heartPulse 1s ease infinite;
+}
+
+.loading-text {
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 1.2rem;
+  color: var(--rose);
+}
+
 /* ============ FLOATING PARTICLES ============ */
 .particles {
   position: fixed;
@@ -203,6 +233,8 @@ body {
 .letter-body.animate p:nth-child(3) { animation-delay: 1.6s; }
 .letter-body.animate p:nth-child(4) { animation-delay: 2.0s; }
 .letter-body.animate p:nth-child(5) { animation-delay: 2.4s; }
+.letter-body.animate p:nth-child(6) { animation-delay: 2.8s; }
+.letter-body.animate p:nth-child(7) { animation-delay: 3.2s; }
 
 @keyframes fadeInLine {
   0% { opacity: 0; transform: translateX(-10px); }
@@ -595,6 +627,12 @@ body {
   box-shadow: 0 8px 25px rgba(232, 69, 107, 0.4);
 }
 
+.btn-submit-diary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .diary-entries {
   display: flex;
   flex-direction: column;
@@ -688,6 +726,12 @@ body {
 </head>
 <body>
 
+<!-- ============ 加载遮罩（等待Firebase数据） ============ -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-heart">💗</div>
+  <div class="loading-text">加载中...</div>
+</div>
+
 <div class="particles" id="particles"></div>
 <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')"><img id="lightbox-img" src="" alt=""></div>
 <div class="confetti-container" id="confetti"></div>
@@ -720,7 +764,7 @@ body {
       <p>至今想起我们的初遇，依然会感叹命运的奇妙！一趟普普通通的归途列车，却让两个原本毫无交集的灵魂，像被月老偷偷牵了红线一般，毫无预兆地撞进了彼此的生命里。有时候我甚至会怀疑，是不是这世间真有写好的剧本，一切才发生得这样恰到好处与自然。从那一刻起，我的世界里就多了一份独属于你的温柔与热闹。</p>
       <p>认识你越久，就越发觉得你像一座挖掘不完的宝藏！我们总是那么同频，一样天马行空，一样抽象有趣，并且总能快速get到对方的点。你总想着xxx，而我老是幻想成为歌手，这些白日梦反而给我们的生活增添了不少乐趣。你也是个非常可爱的女孩，尤其是刚睡醒时那种软软糯糯的模样，分分钟要将我心融化。尹师傅骨子里不服输的好胜心也让我非常欣赏，因为我恰恰也是类似的人，同时也深刻地认识到尹师傅这一路走来的不容易，这全是尹师傅努力奋斗的成果！</p>
       <p>你对待爱人总是毫无保留，把所有的体贴和在意都揉碎了藏在细节里，那些无微不至的照顾，总是让我非常感动。可我也知道，我的小尹殿下偶尔也会脆弱，会在没人的角落偷偷藏起小情绪，会一个人默默内耗。正是这些发着光、又带着点敏感的碎片，拼凑出了一个完整又真实的你，也让我越来越想要深入了解你的全部。</p>
-      <p>和你相处的每一刻，我都像被磁铁吸引一般，不断向你靠拢。从最初觉得你有趣，到慢慢被你的真诚打动，再到后来开始心疼你的敏感，贪恋你的温暖。你像山城的风，轻轻裹住我所有的不安。我变得越来越依恋你，依恋你的陪伴，依恋你怀里的温度，依恋每一个有你在的“平和的幸福”瞬间。</p>
+      <p>和你相处的每一刻，我都像被磁铁吸引一般，不断向你靠拢。从最初觉得你有趣，到慢慢被你的真诚打动，再到后来开始心疼你的敏感，贪恋你的温暖。你像山城的风，轻轻裹住我所有的不安。我变得越来越依恋你，依恋你的陪伴，依恋你怀里的温度，依恋每一个有你在的"平和的幸福"瞬间。</p>
       <p>同时，我也想成为你的避风港，替你遮风挡雨，为你排忧解难。</p>
       <p>所以今天，趁着泸沽湖的风还温柔，我想认认真真地问你一个问题——</p>
       <p>请你翻到下一页吧 ♡</p>
@@ -795,14 +839,33 @@ body {
         </div>
       </div>
       <div class="photo-preview" id="photo-preview"></div>
-      <button class="btn-submit-diary" onclick="submitDiary()">记录这一刻 💝</button>
+      <button class="btn-submit-diary" id="btn-submit" onclick="submitDiary()">记录这一刻 💝</button>
     </div>
     <div class="diary-entries" id="diary-entries"></div>
     <div class="reset-link" onclick="resetAll()">重置页面</div>
   </div>
 </div>
 
+<!-- ============ Firebase SDK (云端同步) ============ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
 <script>
+// ============ FIREBASE 初始化 ============
+firebase.initializeApp({
+  apiKey: "AIzaSyDeuUiRw2i14ppo6y31NuRakb45O1P_rR8",
+  authDomain: "love-yjy-zyc.firebaseapp.com",
+  projectId: "love-yjy-zyc",
+  storageBucket: "love-yjy-zyc.firebasestorage.app",
+  messagingSenderId: "33621692065",
+  appId: "1:33621692065:web:328f44f2e55406c408aae0"
+});
+const db = firebase.firestore();
+
+// ============ CLOUDINARY 配置 (照片云存储) ============
+const CLOUD_NAME = 'dllpw6ttq';
+const UPLOAD_PRESET = 'ybg1fotj';
+
 // ============ PARTICLES ============
 (function() {
   const container = document.getElementById('particles');
@@ -818,20 +881,39 @@ body {
   }
 })();
 
-// ============ STATE ============
-const isAccepted = () => !!localStorage.getItem('together_since');
+// ============ STATE (从Firebase读取，替代localStorage) ============
+let appState = { together_since: null, accepted: false };
 
-// ============ DIARY LOCK ============
+async function loadState() {
+  try {
+    const doc = await db.collection('app').doc('state').get();
+    if (doc.exists) {
+      appState = doc.data();
+    }
+  } catch(e) {
+    console.error('loadState error:', e);
+  }
+}
+
+async function saveState() {
+  try {
+    await db.collection('app').doc('state').set(appState);
+  } catch(e) {
+    console.error('saveState error:', e);
+  }
+}
+
+const isAccepted = () => appState.accepted;
+
+// ============ DIARY LOCK (密码锁) ============
 let diaryUnlocked = false;
 const DIARY_PASSWORD_HASH = '83155287ee2b5b0ef733dff2aa53bbc6d1117788ea02ec01b0d6945f27353e49';
 
 // 计算字符串的 SHA-256 哈希
 async function sha256(text) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
+  const data = new TextEncoder().encode(text);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 async function unlockDiary() {
@@ -866,22 +948,27 @@ function showDiaryLock() {
   }
 }
 
-// ============ PAGE SWITCHING ============
+// ============ PAGE SWITCHING (底部导航) ============
 function switchPage(name) {
+  // 隐藏所有页面
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
     p.style.display = 'none';
   });
 
+  // 显示目标页面
   const target = document.getElementById('page-' + name);
   target.classList.add('active');
   target.style.display = 'flex';
 
+  // 更新导航高亮
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const navItem = document.getElementById('nav-' + name);
   if (navItem) navItem.classList.add('active');
 
+  // 切换到在一起页时启动计时器
   if (name === 'together' && isAccepted()) startTimer();
+  // 切换到日记页时显示密码锁+加载日记
   if (name === 'diary') {
     showDiaryLock();
     loadDiary();
@@ -905,7 +992,7 @@ function goToQuestion() {
   q.style.display = 'flex';
 }
 
-// ============ RUN AWAY BUTTON ============
+// ============ RUN AWAY BUTTON (不愿意按钮乱跑) ============
 let noClickCount = 0;
 const funnyTexts = [
   '不愿意', '再想想？', '真的吗？', '不许选这个！',
@@ -925,14 +1012,17 @@ function runAway() {
   btn.style.top = Math.random() * maxY + 'px';
   btn.style.zIndex = '10';
 
+  // "Yes" grows bigger
   const yesBtn = document.querySelector('.btn-yes');
   yesBtn.style.transform = `scale(${Math.min(1 + noClickCount * 0.06, 1.6)})`;
 }
 
-// ============ SAY YES ============
-function sayYes() {
-  if (!localStorage.getItem('together_since')) {
-    localStorage.setItem('together_since', new Date().toISOString());
+// ============ SAY YES (保存到Firebase云端) ============
+async function sayYes() {
+  if (!appState.accepted) {
+    appState.accepted = true;
+    appState.together_since = new Date().toISOString();
+    await saveState(); // 保存到Firebase，多端同步
   }
   launchConfetti();
   setTimeout(() => {
@@ -948,7 +1038,7 @@ function sayYes() {
   }, 1500);
 }
 
-// ============ CONFETTI ============
+// ============ CONFETTI (撒花) ============
 function launchConfetti() {
   const container = document.getElementById('confetti');
   const shapes = ['❤️', '💕', '🎉', '🎊', '✨', '💖', '🌹'];
@@ -964,12 +1054,12 @@ function launchConfetti() {
   setTimeout(() => container.innerHTML = '', 4000);
 }
 
-// ============ TIMER ============
+// ============ TIMER (计时器，日期从Firebase读取) ============
 let timerStarted = false;
 function startTimer() {
-  if (timerStarted) return;
+  if (timerStarted || !appState.together_since) return;
   timerStarted = true;
-  const since = new Date(localStorage.getItem('together_since'));
+  const since = new Date(appState.together_since);
   function update() {
     const diff = Date.now() - since;
     const days = Math.floor(diff / 86400000);
@@ -987,71 +1077,118 @@ function startTimer() {
   setInterval(update, 1000);
 }
 
-// ============ DIARY ============
-let pendingPhotos = [];
+// ============ CLOUDINARY 照片上传 ============
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+  formData.append('folder', 'love-diary');
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  return data.secure_url; // 返回照片的永久URL
+}
+
+// ============ DIARY (日记本：Firebase + Cloudinary) ============
+let pendingFiles = [];    // 待上传的File对象
+let pendingPreviews = []; // 本地预览URL
 
 function handlePhotos(input) {
   const preview = document.getElementById('photo-preview');
   preview.innerHTML = '';
-  pendingPhotos = [];
+  pendingFiles = [];
+  pendingPreviews = [];
   Array.from(input.files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      pendingPhotos.push(e.target.result);
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
+    pendingFiles.push(file);
+    const url = URL.createObjectURL(file);
+    pendingPreviews.push(url);
+    const img = document.createElement('img');
+    img.src = url;
+    preview.appendChild(img);
   });
 }
 
-function submitDiary() {
+async function submitDiary() {
   const text = document.getElementById('diary-text').value.trim();
-  if (!text && pendingPhotos.length === 0) return;
-  const entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
-  entries.unshift({
-    id: Date.now(),
-    date: new Date().toLocaleString('zh-CN'),
-    text, photos: pendingPhotos
-  });
-  localStorage.setItem('diary_entries', JSON.stringify(entries));
-  document.getElementById('diary-text').value = '';
-  document.getElementById('photo-preview').innerHTML = '';
-  document.getElementById('photo-input').value = '';
-  pendingPhotos = [];
-  loadDiary();
-}
+  if (!text && pendingFiles.length === 0) return;
 
-function loadDiary() {
-  const entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
-  const container = document.getElementById('diary-entries');
-  container.innerHTML = '';
-  entries.forEach((entry, i) => {
-    const div = document.createElement('div');
-    div.className = 'diary-entry';
-    div.style.animationDelay = (i * 0.1) + 's';
-    let photosHTML = '';
-    if (entry.photos && entry.photos.length > 0) {
-      photosHTML = '<div class="entry-photos">' +
-        entry.photos.map(p => `<img src="${p}" onclick="openLightbox(this.src)">`).join('') +
-        '</div>';
+  // 禁用按钮，显示上传中
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = '上传中...';
+
+  try {
+    // 1. 上传照片到Cloudinary
+    const photoUrls = [];
+    for (const file of pendingFiles) {
+      const url = await uploadToCloudinary(file);
+      photoUrls.push(url);
     }
-    div.innerHTML = `
-      <button class="entry-delete" onclick="deleteEntry(${entry.id})">×</button>
-      <div class="entry-date">${entry.date}</div>
-      ${entry.text ? `<div class="entry-text">${escapeHtml(entry.text)}</div>` : ''}
-      ${photosHTML}`;
-    container.appendChild(div);
-  });
+
+    // 2. 保存日记到Firestore
+    await db.collection('diary').add({
+      text: text,
+      photos: photoUrls,
+      date: new Date().toLocaleString('zh-CN'),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // 3. 清空表单
+    document.getElementById('diary-text').value = '';
+    document.getElementById('photo-preview').innerHTML = '';
+    document.getElementById('photo-input').value = '';
+    pendingFiles = [];
+    pendingPreviews = [];
+
+    // 4. 重新加载日记列表
+    loadDiary();
+  } catch(e) {
+    console.error('submitDiary error:', e);
+    alert('保存失败，请检查网络后重试');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '记录这一刻 💝';
 }
 
-function deleteEntry(id) {
+async function loadDiary() {
+  try {
+    const snapshot = await db.collection('diary').orderBy('timestamp', 'desc').get();
+    const container = document.getElementById('diary-entries');
+    container.innerHTML = '';
+    snapshot.forEach((doc, i) => {
+      const entry = doc.data();
+      const div = document.createElement('div');
+      div.className = 'diary-entry';
+      div.style.animationDelay = (i * 0.1) + 's';
+      let photosHTML = '';
+      if (entry.photos && entry.photos.length > 0) {
+        photosHTML = '<div class="entry-photos">' +
+          entry.photos.map(p => `<img src="${p}" onclick="openLightbox(this.src)">`).join('') +
+          '</div>';
+      }
+      div.innerHTML = `
+        <button class="entry-delete" onclick="deleteEntry('${doc.id}')">×</button>
+        <div class="entry-date">${entry.date || ''}</div>
+        ${entry.text ? `<div class="entry-text">${escapeHtml(entry.text)}</div>` : ''}
+        ${photosHTML}`;
+      container.appendChild(div);
+    });
+  } catch(e) {
+    console.error('loadDiary error:', e);
+  }
+}
+
+async function deleteEntry(id) {
   if (!confirm('确定删除这条日记吗？')) return;
-  let entries = JSON.parse(localStorage.getItem('diary_entries') || '[]');
-  entries = entries.filter(e => e.id !== id);
-  localStorage.setItem('diary_entries', JSON.stringify(entries));
-  loadDiary();
+  try {
+    await db.collection('diary').doc(id).delete();
+    loadDiary();
+  } catch(e) {
+    console.error('deleteEntry error:', e);
+  }
 }
 
 function escapeHtml(str) {
@@ -1065,15 +1202,31 @@ function openLightbox(src) {
   document.getElementById('lightbox').classList.add('active');
 }
 
-function resetAll() {
-  if (!confirm('确定重置吗？这会清除所有数据（日记、计时、表白状态）并回到最初的情书页面。')) return;
-  localStorage.removeItem('together_since');
-  localStorage.removeItem('diary_entries');
+// ============ 重置（清除云端所有数据） ============
+async function resetAll() {
+  if (!confirm('确定重置吗？这会清除云端所有数据（日记、计时、表白状态）并回到最初的情书页面。')) return;
+  try {
+    // 删除表白状态
+    await db.collection('app').doc('state').delete();
+    // 删除所有日记条目
+    const snapshot = await db.collection('diary').get();
+    const batch = db.batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+  } catch(e) {
+    console.error('resetAll error:', e);
+  }
   location.reload();
 }
 
-// ============ 页面初始化 ============
-window.addEventListener('DOMContentLoaded', () => {
+// ============ 页面初始化（从Firebase加载状态） ============
+window.addEventListener('DOMContentLoaded', async () => {
+  // 从Firebase读取表白状态和在一起日期
+  await loadState();
+
+  // 隐藏加载遮罩
+  document.getElementById('loading-overlay').classList.add('hidden');
+
   if (isAccepted()) {
     // 已经表白过：显示底部导航，隐藏"继续"按钮，去掉逐行动画
     document.getElementById('bottom-nav').classList.add('visible');
